@@ -35,9 +35,57 @@
                     </li>
                 </ul>
                 <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="text" id="searchUsernameInput" placeholder="Search by username" aria-label="Search">
+                        <button class="btn btn-outline-success" id="searchUsernameButton" type="submit">Search</button>
+                      </form>
+                      
                 </form>
             </div>
         </div>
     </nav>
+
+    <script>
+        // Function to perform the username search
+        function performUsernameSearch(query) {
+          const searchResults = usersWithSecrets.filter(user => {
+            return user.username.toLowerCase().includes(query.toLowerCase());
+          });
+      
+          // Update the page with the search results (e.g., re-render the users)
+          renderUsernameSearchResults(searchResults);
+        }
+      
+        // Function to render username search results
+        function renderUsernameSearchResults(results) {
+          const container = document.querySelector('.container'); // Modify this selector based on your layout
+          container.innerHTML = '';
+      
+          // Render username search results
+          results.forEach(user => {
+            // Render user information or profile here
+            const userCard = document.createElement('div');
+            userCard.className = 'user-card';
+      
+            // Add user details to the card (e.g., username, profile picture, etc.)
+            // Example: userCard.innerHTML = `<img src="${user.profilePicture}" alt="${user.username}"><h3>${user.username}</h3>`;
+      
+            container.appendChild(userCard);
+          });
+        }
+      
+        // Event listener for the username search button
+        const searchUsernameButton = document.getElementById('searchUsernameButton');
+        searchUsernameButton.addEventListener('click', (event) => {
+          event.preventDefault(); // Prevent form submission (optional)
+      
+          const searchUsernameInput = document.getElementById('searchUsernameInput');
+          const query = searchUsernameInput.value.trim(); // Get the search query
+      
+          if (query.length > 0) {
+            performUsernameSearch(query); // Perform the username search
+          }
+        });
+      </script>
+      
+      

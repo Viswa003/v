@@ -32,9 +32,9 @@ mongoose.connect("mongodb://localhost:27017/userDB", { useNewUrlParser: true });
 const userSchema = new mongoose.Schema ({
   username: String,
   password: String,
-  title: String,
   secret: [
     {
+      title: String,
       message: String,
       timestamp: {
         type: Date,
@@ -102,6 +102,9 @@ app.get("/secrets", ensureAuthenticated, function(req, res){
 
             if (days > 0) {
               secret.timeAgo = `${days} days ago`;
+              if (days==1) {
+                secret.timeAgo = `${days} day ago`;
+              }
             } else if (hours > 0) {
               secret.timeAgo = `${hours} hours ago`;
             } else if (minutes > 0) {
@@ -134,12 +137,13 @@ app.get("/submit", ensureAuthenticated, function(req, res){
 
 app.post("/submit", ensureAuthenticated, function(req, res){
   const submittedSecret = req.body.secret;
+  const submittedTitle = req.body.title;
   const timestamp = Date.now(); // Get the current timestamp
 
   User.findById(req.user.id)
     .then(foundUser => {
       if (foundUser) {
-        foundUser.secret.push({ message: submittedSecret, timestamp: timestamp });
+        foundUser.secret.push({ message: submittedSecret, timestamp: timestamp, title: submittedTitle });
         return foundUser.save();
       }
     })

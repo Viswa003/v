@@ -1,4 +1,19 @@
+  <footer>
+    <h6>Copyright &copy; <span id="c"></span></h6>
+  </footer>
 
+  <script>
+    var today = new Date();
+    var currentYear = today.getFullYear();
+    const year = document.getElementById('c');
+    year.textContent = currentYear;
+  </script>
 
+  <style>
+    footer {
+      text-align: center;
+      padding-top: 350px;
+    }
+  </style>
 </body>
 </html>
