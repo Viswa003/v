@@ -26,7 +26,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect("mongodb://localhost:27017/userDB", { useNewUrlParser: true });
+
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true // Add this line
+});
+
+
 
 
 const userSchema = new mongoose.Schema ({
@@ -74,7 +80,7 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-app.get("/", function(req, res){
+app.get("/login", function(req, res){
   res.render("login");
 });
 
