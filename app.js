@@ -26,14 +26,10 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true // Add this line
+  useUnifiedTopology: true
 });
-
-
-
 
 const userSchema = new mongoose.Schema ({
   username: String,
@@ -49,7 +45,6 @@ const userSchema = new mongoose.Schema ({
     }
   ]
 });
-
 
 userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
@@ -140,8 +135,6 @@ app.post("/search", ensureAuthenticated, function(req, res){
   });
 });
 
-
-
 app.get("/secrets", ensureAuthenticated, function(req, res){
   User.find({"secret": {$ne: null}})
     .then(foundUsers => {
@@ -160,7 +153,7 @@ app.get("/secrets", ensureAuthenticated, function(req, res){
 
             if (days > 0) {
               secret.timeAgo = `${days} days ago`;
-              if (days==1) {
+              if (days === 1) {
                 secret.timeAgo = `${days} day ago`;
               }
             } else if (hours > 0) {
@@ -185,13 +178,9 @@ app.get("/secrets", ensureAuthenticated, function(req, res){
     });
 });
 
-
-
 app.get("/submit", ensureAuthenticated, function(req, res){
   res.render("submit");
 });
-
-
 
 app.post("/submit", ensureAuthenticated, function(req, res){
   const submittedSecret = req.body.secret;
@@ -214,7 +203,6 @@ app.post("/submit", ensureAuthenticated, function(req, res){
     });
 });
 
-
 app.get("/logout", function(req, res){
   req.logout(function(err) {
     if (err) {
@@ -236,12 +224,7 @@ app.post("/signup", function(req, res){
   });
 });
 
-// Use passport.authenticate as middleware for login route
-app.post("/login", passport.authenticate("local", {
-  successRedirect: "/secrets",
-  failureRedirect: "/login"
-}));
-
-app.listen(3000, function() {
-  console.log("Server started on port 3000.");
+const port = process.env.PORT || 3000; // Use dynamic port
+app.listen(port, function() {
+  console.log(`Server started on port ${port}.`);
 });
