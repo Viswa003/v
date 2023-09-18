@@ -1,5 +1,17 @@
 <%- include('partials/header') %>
 
+<style>
+  /* Style the textarea to look like a text field */
+  .text-field-style {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none; /* Prevent resizing of the textarea */
+    overflow: auto; /* Show scrollbars when needed */
+  }
+</style>
+
 <div class="container">
   <div class="jumbotron centered">
     <br>
@@ -10,13 +22,12 @@
       <div class="form-group">
         <input type="text" class="form-control text-center" name="title" placeholder="Give it a title" required>
         <br>
-        <input type="text" class="form-control text-center" name="secret" placeholder="Send a message" required>
+        <!-- Apply the text field style to the textarea -->
+        <textarea class="form-control text-center text-field-style" name="secret" placeholder="Send a message" required></textarea>
       </div>
       <br>
       <button type="submit" class="btn btn-dark">Post</button>
     </form>
-
-
   </div>
 </div>
 <%- include('partials/footer') %>

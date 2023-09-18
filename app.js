@@ -74,12 +74,64 @@ function ensureAuthenticated(req, res, next) {
   }
 }
 
-app.get("/login", function(req, res){
+app.get("/", function(req, res){
   res.render("login");
 });
 
 app.get("/signup", function(req, res){
   res.render("signup");
+});
+
+app.post("/search", ensureAuthenticated, function(req, res){
+  const searchTitle = req.body.searchTitle;
+
+  User.find({
+    "secret": {
+      $elemMatch: { "title": searchTitle }
+    }
+  })
+  .then(foundUsers => {
+    // Handle the case where no matching secrets are found
+    if (!foundUsers || foundUsers.length === 0) {
+      return res.render("searchResults", { usersWithSecrets: [] }); // No matching secrets found
+    }
+
+    // Precompute "time ago" for each secret
+    foundUsers.forEach(user => {
+      user.secret.forEach(secret => {
+        const now = new Date();
+        const messageTime = secret.timestamp;
+        const diff = now - messageTime;
+
+        const seconds = Math.floor(diff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        if (days > 0) {
+          secret.timeAgo = `${days} days ago`;
+          if (days === 1) {
+            secret.timeAgo = `${days} day ago`;
+          }
+        } else if (hours > 0) {
+          secret.timeAgo = `${hours} hours ago`;
+        } else if (minutes > 0) {
+          secret.timeAgo = `${minutes} minutes ago`;
+          if (minutes === 1) {
+            secret.timeAgo = `1 minute ago` ;
+          }
+        } else {
+          secret.timeAgo = `${seconds} seconds ago`;
+        }
+      });
+    });
+
+    res.render("searchResults", { usersWithSecrets: foundUsers });
+  })
+  .catch(err => {
+    console.log(err);
+    res.redirect("/error"); // Handle errors by redirecting to an error page or as needed
+  });
 });
 
 

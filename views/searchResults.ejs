@@ -1,0 +1,18 @@
+<!-- views/searchResults.ejs -->
+<h1>Search Results</h1>
+
+<% if (usersWithSecrets.length > 0) { %>
+  <% usersWithSecrets.forEach(function(user) { %>
+    <% user.secret.forEach(function(secret){ %>
+      <div class="card">
+        <!-- Display secret details as desired -->
+        <h5><%= user.username %></h5>
+        <h6><%= secret.title %></h6>
+        <p><%= secret.message %></p>
+        <p><%= secret.timeAgo %></p>
+      </div>
+    <% }); %>
+  <% }); %>
+<% } else { %>
+  <p>No matching secrets found.</p>
+<% } %>
